@@ -51,8 +51,7 @@ else:
     HAS_PEP257 = True
 
 
-from hghooks import CheckerManager, re_options
-
+from hghooks import CheckerManager, re_options, SysOutHandler
 
 def pep8_checker(pep8_options):
     extra_args = []
@@ -69,13 +68,15 @@ def pep8_checker(pep8_options):
             open(filename, 'w').write(data)
 
         if PEP8_VERSION > (1, 2):
-            args = files_to_check.keys() + extra_args
-            options, paths = pep8.process_options(args)
-            options_dict = options.__dict__.copy()
-            options_dict['paths'] = paths
-            style_guide = pep8.StyleGuide(**options_dict)
-            report = style_guide.check_files()
-            return report.total_errors
+            with SysOutHandler(sys) as out:
+                args = files_to_check.keys() + extra_args
+                options, paths = pep8.process_options(args)
+                options_dict = options.__dict__.copy()
+                options_dict['paths'] = paths
+                style_guide = pep8.StyleGuide(**options_dict)
+                report = style_guide.check_files()
+                log_rows = out.get_log()
+            return report.total_errors, log_rows
 
         else:
             # monkey patch sys.argv options so we can call pep8
@@ -106,6 +107,7 @@ def pep8hook(ui, repo, hooktype, node, pending, **kwargs):
     return checker_manager.check(pep8_checker(pep8_options))
 
 
+
 pdb_catcher = re.compile(r'^[^#]*pdb\.set_trace\(\)', re_options)
 
 
@@ -118,7 +120,7 @@ def pdb_checker(files_to_check, msg):
         return warnings
 
     return sum([check_one_file(data, filename)
-                for filename, data in files_to_check.items()])
+                for filename, data in files_to_check.items()]), ''
 
 
 def pdbhook(ui, repo, hooktype, node, pending, **kwargs):
@@ -185,7 +187,7 @@ def pyflakes_check(data, filename):
 
 def pyflakes_checker(files_to_check, msg):
     return sum([pyflakes_check(data, filename)
-                for filename, data in files_to_check.items()])
+                for filename, data in files_to_check.items()]), ''
 
 
 def pyflakeshook(ui, repo, hooktype, node, pending, **kwargs):
@@ -202,7 +204,7 @@ def jslint_check(data, filename):
     if output:
         print >> sys.stderr, "%s: problem decoding source" % (filename, )
         print >> sys.stderr, '\n'.join(output)
-        return 1
+        return 1, ''
     return 0
 
 

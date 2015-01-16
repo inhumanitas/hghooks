@@ -84,11 +84,12 @@ class CheckerManager(object):
                 files_to_check[full_path] = filedata
 
             if files_to_check:
-                rev_warnings += checker(files_to_check, description)
+                errors_num, log = checker(files_to_check, description)
+                rev_warnings += errors_num
 
             if rev_warnings:
-                self.ui.warn('%d warnings found in revision %d\n' %
-                             (rev_warnings, current_rev - 1))
+                self.ui.warn('%s\n\n %d errors in revision %d\n' %
+                             (log, rev_warnings, current_rev - 1))
             else:
                 self.ui.debug('No warnings in revision %d. Good job!\n' %
                               (current_rev - 1))
