@@ -1,6 +1,15 @@
 #This is hghooks cloned repositiory from bitbucket
 #Here we're adding support to use this hooks with TortoiseHG
 
+#TODO
+- allow to pass all errors and commit current
+- make to work all hooks:
+	* ~~pep8~~
+	* ~~pyflakes~~
+	* pdb
+	* jslint
+
+
 
 .. contents::
 
