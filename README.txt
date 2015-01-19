@@ -1,3 +1,7 @@
+#This is hghooks cloned repositiory from bitbucket
+#Here we're adding support to use this hooks with TortoiseHG
+
+
 .. contents::
 
 =======
