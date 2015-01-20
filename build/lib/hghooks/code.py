@@ -54,6 +54,7 @@ else:
 from hghooks import CheckerManager, re_options
 from hghooks.handlers import SysOutHandler
 
+
 def pep8_checker(pep8_options):
     extra_args = []
     for key, value in pep8_options.iteritems():
@@ -108,8 +109,7 @@ def pep8hook(ui, repo, hooktype, node, pending, **kwargs):
     return checker_manager.check(pep8_checker(pep8_options))
 
 
-
-pdb_catcher = re.compile(r'^[^#]*pdb\.set_trace\(\)', re_options)
+pdb_catcher = re.compile(r'^[^#]*pdb|pdb', re_options)
 
 
 def pdb_checker(files_to_check, msg):
@@ -160,7 +160,7 @@ def pyflakes_check(data, filename):
             line = text.splitlines()[-1]
 
             if offset is not None:
-                offset = offset - (len(text) - len(line))
+                offset -= len(text) - len(line)
 
             print >> sys.stderr, '%s:%d: %s' % (filename, lineno, msg)
             print >> sys.stderr, line
@@ -186,11 +186,11 @@ def pyflakes_check(data, filename):
         return len(messages)
 
 
-def pyflakes_checker(files_to_check, msg):
-    msg = ''
-    
+def pyflakes_checker(files_to_check):
+
     with SysOutHandler(sys) as out:
-        messages_count = sum([pyflakes_check(data, filename)
+        messages_count = sum(
+            [pyflakes_check(data, filename)
                 for filename, data in files_to_check.items()])
         msg = out.get_log()
     return messages_count, msg

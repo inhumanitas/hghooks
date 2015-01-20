@@ -2,7 +2,6 @@ AUTHORS
 CHANGES.txt
 COPYING
 MANIFEST.in
-README.txt
 setup.py
 hghooks/__init__.py
 hghooks/code.py

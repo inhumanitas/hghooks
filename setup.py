@@ -31,7 +31,7 @@ setup(
     author="Lorenzo Gil Sanchez",
     author_email="lorenzo.gil.sanchez@gmail.com",
     description="A set of useful hooks for Mercurial",
-    long_description='\n\n'.join([read('README.txt'), read('CHANGES.txt')]),
+    long_description='\n\n'.join([read('README.md'), read('CHANGES.txt')]),
     license="LGPL 3",
     keywords="mercurial pep8 pyflakes trac",
     packages=['hghooks'],
