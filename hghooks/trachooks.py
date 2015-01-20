@@ -138,9 +138,9 @@ class TicketChecker(object):
             db = env.get_db_cnx()
 
             cursor = db.cursor()
-            cursor.execute("SELECT COUNT(id) FROM ticket WHERE "
-                           "status <> 'closed' AND id IN (%s)" %
-                           ','.join(tickets))
+            cursor.execute(
+                "SELECT COUNT(id) FROM ticket WHERE "
+                "status <> 'closed' AND id IN (%s)" % ','.join(tickets))
             row = cursor.fetchone()
             if not row or row[0] < 1:
                 self.ui.warn(self.error_msg + '\n')
