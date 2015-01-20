@@ -186,7 +186,7 @@ def pyflakes_check(data, filename):
         return len(messages)
 
 
-def pyflakes_checker(files_to_check):
+def pyflakes_checker(files_to_check, description):
 
     with SysOutHandler(sys) as out:
         messages_count = sum(
